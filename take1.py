@@ -1,16 +1,36 @@
 from vpython import *
+import random
 n=3
+
 MASS = 1
+LENGTH = 1
+G = 9.81
+
 endpoints = []
+boxes = []
 velocities = []
 forces = []
 
+dt = .001
 
-def move(endpoints, velocities, forces):
+def init():
     for e in range(n):
-        endpoints[e]+=velocities[e]
-        velocities[e]+=forces[e]/MASS
-    update_forces(edpoints, velocities, forces)
+        boxes.append(box(pos = vector(6,10-e*LENGTH-LENGTH/2,0), size = vector(LENGTH,1,1), color = vector(random.random(), random.random(), random.random())))
+        velocities.append(vector(0,0,0))
+        forces.append(vector(0, -MASS*G, 0))
 
-def update_forces(edpoints, velocities, forces):
-    
+def move():
+    for e in range(n):
+        boxes[e].pos+=velocities[e] * dt
+        velocities[e]+=forces[e]/MASS * dt
+    update_forces()
+
+def update_forces():
+    pass
+
+init()
+
+i = 0
+while(i < 1000):
+    rate(1/dt)
+    move()
