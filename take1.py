@@ -5,6 +5,7 @@ n=3
 MASS = 1
 LENGTH = 1
 G = 9.81
+k = 1
 
 endpoints = []
 boxes = []
@@ -26,7 +27,12 @@ def move():
     update_forces()
 
 def update_forces():
-    pass
+    for i in range(n):
+        forces[i] = vector(0, -MASS*G, 0)
+    for i in range(n-1):
+        diff = boxes[i+1].pos - boxes[i].pos
+        forces[i] += diff*k
+        forces[i+1] += diff*(-k)
 
 init()
 
