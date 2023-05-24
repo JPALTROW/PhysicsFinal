@@ -1,14 +1,14 @@
 from vpython import *
 import random
-n=6
 
+n=20
 
 MASS = 1
 DISTANCE = 6
 EQUILIBRIUM = 4
 G = 9.81
-k = 4
-DAMPEN = .1
+k = 100
+DAMPEN = .01
 
 endpoints = []
 boxes = []
@@ -19,7 +19,7 @@ dt = .001
 
 def init():
     for e in range(n):
-        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = .5, color = vector(random.random(), random.random(), random.random())))
+        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,0)))
         velocities.append(vector(0,0,0))
         forces.append(vector(0, 0, 0))
 
