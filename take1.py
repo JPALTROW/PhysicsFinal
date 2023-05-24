@@ -29,7 +29,7 @@ def init():
 def move():
     for e in range(n):
         boxes[e].pos+=velocities[e] * dt
-        velocities[e]+=forces[e]/MASS * dt
+        velocities[e]+=forces[e]/masses[e] * dt
     update_forces()
 
 def update_forces():
