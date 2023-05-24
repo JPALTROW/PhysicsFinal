@@ -2,11 +2,13 @@ from vpython import *
 import random
 n=3
 
+
 MASS = 1
 DISTANCE = 8
-EQUILIBRIUM = 4.1
+EQUILIBRIUM = 6
 G = 9.81
-k = 1
+k = 4
+DAMPEN = .3
 
 endpoints = []
 boxes = []
@@ -36,6 +38,8 @@ def update_forces():
 
         forces[i] += diff*k
         forces[i+1] += diff*(-k)
+    for i in range(n):
+        forces[i] += DAMPEN*(velocities[i].dot(velocities[i]))*(-1)*velocities[i].hat
 
 init()
 
