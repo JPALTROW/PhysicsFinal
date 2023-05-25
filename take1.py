@@ -3,15 +3,15 @@ import random
 
 n=20
 
-MASS = 1
 DISTANCE = 6
 EQUILIBRIUM = 4
 G = 9.81
 k = 10
 DAMPEN = .01
 
+spvings = []
 masses = [1]*n
-masses[14] = 20
+masses[14] = 1
 endpoints = []
 boxes = []
 velocities = []
@@ -24,12 +24,17 @@ def init():
         boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,0)))
         velocities.append(vector(0,0,0))
         forces.append(vector(0, 0, 0))
+    for e in range(n-1):
+        spvings.append(helix(pos=boxes[e].pos, axis=boxes[e+1].pos-boxes[e].pos, thickness=1))
     boxes[14].color = vector(1,0,0)
 
 def move():
     for e in range(n):
         boxes[e].pos+=velocities[e] * dt
         velocities[e]+=forces[e]/masses[e] * dt
+    for e in range(n-1):
+        spvings[e].pos = boxes[e].pos
+        spvings[e].axis = boxes[e+1].pos-boxes[e].pos
     update_forces()
 
 def update_forces():
