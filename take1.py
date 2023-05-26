@@ -63,7 +63,7 @@ def update_forces():
         forces[i] = vector(0, -G*masses[i], 0)
     for i in range(n-1):
         diff = (boxes[i+1].pos + boxes[i].pos)/2 - boxes[i].pos
-        diff = (diff.mag - EQUILIBRIUM/2) / diff.mag * diff
+        diff = (2*diff.mag - EQUILIBRIUM) / diff.mag * diff
         forces[i] += diff*k
         forces[i+1] += diff*(-k)
     forces[0] = vector(0,0,0)
@@ -87,14 +87,26 @@ init()
 sleep(1)
 
 i = 0
-f1 = gcurve(color=color.cyan) # a graphics curve
+f1 = gcurve(color = vector(1,0,0)) # a graphics curve
+
 while(True):
     rate(1/dt)
     energyP = 0
+    energyT = 0
+    energyK = 0
+    energyE = 0
+    energyGP = 0
     for j in range(n):
         energyP += energyB[j][1]
+        energyGP += energyB[j][1]
+        energyK += energyB[j][0]
     for j in range(n-1):
         energyP += energyS[j]
-    f1.plot(i,energyP)
+        energyE += energyS[j]
+    energyT = energyP + energyK
+
+    f1.plot(i,energyT)
+
+
     move()
     i+=1
