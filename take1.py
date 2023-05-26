@@ -81,12 +81,20 @@ def update_energies():
     for i in range(n):
         energyB[i] = [masses[i]*velocities[i].mag*velocities[i].mag/2,masses[i]*G*boxes[i].pos.y]
     for i in range(n-1):
-        energyS[i] = [1/2 * k * ((boxes[i].pos-boxes[i+1].pos).mag-EQUILIBRIUM)**2]
+        energyS[i] = 1/2 * k * ((boxes[i].pos-boxes[i+1].pos).mag-EQUILIBRIUM)**2
 
 init()
 sleep(1)
 
 i = 0
-while(i < 1000):
+f1 = gcurve(color=color.cyan) # a graphics curve
+while(True):
     rate(1/dt)
+    energyP = 0
+    for j in range(n):
+        energyP += energyB[j][1]
+    for j in range(n-1):
+        energyP += energyS[j]
+    f1.plot(i,energyP)
     move()
+    i+=1
