@@ -92,21 +92,17 @@ f1 = gcurve(color = vector(1,0,0)) # a graphics curve
 while(True):
     rate(1/dt)
     energyP = 0
-    energyT = 0
     energyK = 0
-    energyE = 0
-    energyGP = 0
+    enertyT = 0
     for j in range(n):
         energyP += energyB[j][1]
-        energyGP += energyB[j][1]
         energyK += energyB[j][0]
     for j in range(n-1):
         energyP += energyS[j]
-        energyE += energyS[j]
+
     energyT = energyP + energyK
 
-    f1.plot(i,energyT)
-
+    f1.plot(i,energyP)
 
     move()
     i+=1
