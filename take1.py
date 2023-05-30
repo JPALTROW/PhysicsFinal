@@ -102,22 +102,23 @@ total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
 potential = gcurve(color = vector(0,0,1), label='Potential Energy')
 kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
 while(True):
-    rate(1/dt)
-    energyP = 0
-    energyK = 0
-    energyT = 0
-    spvingergy = 0
-    for j in range(n):
-        energyP += energyB[j][1]
-        energyK += energyB[j][0]
-    for j in range(n-1):
-        energyP += energyS[j]
+    if (run):
+        rate(1/dt)
+        energyP = 0
+        energyK = 0
+        energyT = 0
+        energyE = 0
+        for j in range(n):
+            energyP += energyB[j][1]
+            energyK += energyB[j][0]
+        for j in range(n-1):
+            energyP += energyS[j]
 
-    energyT = energyP + energyK
+        energyT = energyP + energyK
 
-    total.plot(i,energyT)
-    potential.plot(i, energyP)
-    kinetic.plot(i,energyK)
+        total.plot(i,energyT)
+        potential.plot(i, energyP)
+        kinetic.plot(i,energyK)
 
-        move()
-        i+=1
+            move()
+            i+=1
