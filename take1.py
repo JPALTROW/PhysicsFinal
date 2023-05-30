@@ -120,5 +120,5 @@ while(True):
         potential.plot(i, energyP)
         kinetic.plot(i,energyK)
 
-            move()
-            i+=1
+        move()
+        i+=1
