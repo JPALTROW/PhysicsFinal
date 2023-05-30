@@ -87,13 +87,16 @@ init()
 sleep(1)
 
 i = 0
-f1 = gcurve(color = vector(1,0,0)) # a graphics curve
-
+energy = graph(title='Energies of the Spvingz', xtitle='Time (s)', ytitle='Energy (J)', fast=True, width=800)
+total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
+potential = gcurve(color = vector(0,0,1), label='Potential Energy')
+kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
 while(True):
     rate(1/dt)
     energyP = 0
     energyK = 0
-    enertyT = 0
+    energyT = 0
+    spvingergy = 0
     for j in range(n):
         energyP += energyB[j][1]
         energyK += energyB[j][0]
@@ -102,7 +105,9 @@ while(True):
 
     energyT = energyP + energyK
 
-    f1.plot(i,energyP)
+    total.plot(i,energyT)
+    potential.plot(i, energyP)
+    kinetic.plot(i,energyK)
 
     move()
     i+=1
