@@ -17,6 +17,16 @@ energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Pot
 energyS = [] #stores energy of each spring (elastic)
 
 dt = .001 #time constant
+run = False
+def pause(b):
+    global run
+    run = not run
+    if run:
+        b.text = 'Pause'
+    else:
+        b.text = 'Run'
+    print(run)
+pb = button(text='Run', bind=pause)
 
 '''
 void init()
@@ -90,23 +100,24 @@ i = 0
 f1 = gcurve(color = vector(1,0,0)) # a graphics curve
 
 while(True):
-    rate(1/dt)
-    energyP = 0
-    energyT = 0
-    energyK = 0
-    energyE = 0
-    energyGP = 0
-    for j in range(n):
-        energyP += energyB[j][1]
-        energyGP += energyB[j][1]
-        energyK += energyB[j][0]
-    for j in range(n-1):
-        energyP += energyS[j]
-        energyE += energyS[j]
-    energyT = energyP + energyK
+    if(run):
+        rate(1/dt)
+        energyP = 0
+        energyT = 0
+        energyK = 0
+        energyE = 0
+        energyGP = 0
+        for j in range(n):
+            energyP += energyB[j][1]
+            energyGP += energyB[j][1]
+            energyK += energyB[j][0]
+        for j in range(n-1):
+            energyP += energyS[j]
+            energyE += energyS[j]
+        energyT = energyP + energyK
 
-    f1.plot(i,energyT)
+        f1.plot(i,energyT)
 
 
-    move()
-    i+=1
+        move()
+        i+=1
