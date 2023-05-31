@@ -2,6 +2,11 @@ from vpython import *
 
 n=20 #number of ballz
 
+energy = graph(title='Energies of the Spvingz', xtitle='Time (s)', ytitle='Energy (J)', fast=True, width=800)
+total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
+potential = gcurve(color = vector(0,0,1), label='Potential Energy')
+kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
+
 DISTANCE = 6 #original distance between each spving
 EQUILIBRIUM = 4 #equilibrium distance between each spving
 G = 9.81 #gravity
@@ -49,6 +54,10 @@ def init():
     for e in range(n-1):
         spvings.append(helix(pos=boxes[e].pos, axis=boxes[e+1].pos-boxes[e].pos, thickness=1))
         energyS.append(1/2 * k * ((boxes[e].pos-boxes[e+1].pos).mag-EQUILIBRIUM)**2)
+    energy = graph(title='Energies of the Spvingz', xtitle='Time (s)', ytitle='Energy (J)', fast=True, width=800)
+    total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
+    potential = gcurve(color = vector(0,0,1), label='Potential Energy')
+    kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
 
 '''
 void move()
@@ -102,11 +111,23 @@ def update_energies():
 init()
 sleep(1)
 
-i = 0
-energy = graph(title='Energies of the Spvingz', xtitle='Time (s)', ytitle='Energy (J)', fast=True, width=800)
-total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
-potential = gcurve(color = vector(0,0,1), label='Potential Energy')
-kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
+selectedmass = 0
+def massmenu(m):
+    pass
+
+l = []
+for i in range(n):
+    l.append(str(i))
+
+masselector = menu(choices=l, index=0, bind=massmenu)
+def selectmass(s):
+    masses[masselector.index] = s.value
+    t = (s.value-s.min)/(s.max-s.min)
+    boxes[masselector.index].color=vector(0,1,0) * (1-t) + vector(1,0,0) * t
+sl=slider(min=1, max=10, value=1, length=220, bind=selectmass)
+
+i = 0 #time
+
 while(True):
     if (run):
         rate(1/dt)
