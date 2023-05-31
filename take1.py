@@ -18,6 +18,7 @@ energyS = [] #stores energy of each spring (elastic)
 
 dt = .001 #time constant
 run = False
+trailing = False
 
 '''
 void pause(b)
@@ -35,6 +36,26 @@ def pause(b):
 pb = button(text='Run', bind=pause)
 
 '''
+void trail(b)
+Inputs:
+Returns:
+Toggles trace on the balls
+'''
+def trail(b):
+    global trailing
+    trailing = not trailing
+    if trailing:
+        b.text = 'Trail Off'
+        for i in boxes:
+            i.make_trail = True
+    else:
+        b.text = 'Trail On'
+        for i in boxes:
+            i.make_trail = False
+            i.clear_trail()
+tb = button(text='Trail On', bind=trail)
+
+'''
 void init()
 Inputs:
 Returns:
@@ -42,7 +63,7 @@ initializes boxes based on DISTANCE and initializes spvings and energy arrays
 '''
 def init():
     for e in range(n):
-        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,0)))
+        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,0), make_trail = False, retain = 100))
         velocities.append(vector(0,0,0))
         forces.append(vector(0, 0, 0))
         energyB.append([0,masses[e]*G*boxes[e].pos.y])
