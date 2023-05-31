@@ -6,7 +6,7 @@ DISTANCE = 6 #original distance between each spving
 EQUILIBRIUM = 4 #equilibrium distance between each spving
 G = 9.81 #gravity
 k = 10 #spring constant
-DAMPEN = .01 #dampening constant
+DAMPEN = .001 #dampening constant
 
 spvings = [] #array of spvings (contains helix objects)
 masses = [1]*n #array of masses (stores constant values corresponding to mass)
@@ -18,6 +18,13 @@ energyS = [] #stores energy of each spring (elastic)
 
 dt = .001 #time constant
 run = False
+
+'''
+void pause(b)
+Inputs:
+Returns:
+initializes boxes based on DISTANCE and initializes spvings and energy arrays
+'''
 def pause(b):
     global run
     run = not run
@@ -25,7 +32,6 @@ def pause(b):
         b.text = 'Pause'
     else:
         b.text = 'Run'
-    print(run)
 pb = button(text='Run', bind=pause)
 
 '''
@@ -120,5 +126,5 @@ while(True):
         potential.plot(i, energyP)
         kinetic.plot(i,energyK)
 
-            move()
-            i+=1
+        move()
+        i+=1
