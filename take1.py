@@ -150,8 +150,8 @@ sl=slider(min=1, max=10, value=1, length=220, bind=selectmass)
 i = 0 #time
 
 while(True):
+    rate(1/dt)
     if (run):
-        rate(1/dt)
         energyP = 0
         energyK = 0
         energyT = 0
