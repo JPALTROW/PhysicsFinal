@@ -11,7 +11,7 @@ DISTANCE = 6 #original distance between each spving
 EQUILIBRIUM = 4 #equilibrium distance between each spving
 G = 9.81 #gravity
 k = 10 #spring constant
-DAMPEN = .001 #dampening constant
+DAMPEN = .01 #dampening constant
 
 spvings = [] #array of spvings (contains helix objects)
 masses = [1]*n #array of masses (stores constant values corresponding to mass)
@@ -68,7 +68,7 @@ initializes boxes based on DISTANCE and initializes spvings and energy arrays
 '''
 def init():
     for e in range(n):
-        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,0), make_trail = False, retain = 100))
+        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,1), make_trail = False, retain = 100))
         velocities.append(vector(0,0,0))
         forces.append(vector(0, 0, 0))
         energyB.append([0,masses[e]*G*boxes[e].pos.y])
@@ -144,7 +144,7 @@ masselector = menu(choices=l, index=0, bind=massmenu)
 def selectmass(s):
     masses[masselector.index] = s.value
     t = (s.value-s.min)/(s.max-s.min)
-    boxes[masselector.index].color=vector(0,1,0) * (1-t) + vector(1,0,0) * t
+    boxes[masselector.index].color=vector(0,1,1) * (1-t) + vector(1,0,1) * t
 sl=slider(min=1, max=10, value=1, length=220, bind=selectmass)
 
 i = 0 #time
