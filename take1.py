@@ -22,23 +22,23 @@ energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Pot
 energyS = [] #stores energy of each spring (elastic)
 
 dt = .001 #time constant
-run = False
+setup = True
 trailing = False
 
 '''
-void pause(b)
+void begin(b)
 Inputs:
 Returns:
-initializes boxes based on DISTANCE and initializes spvings and energy arrays
+pause button updates global setup variable
 '''
-def pause(b):
-    global run
-    run = not run
-    if run:
-        b.text = 'Pause'
+def begin(b):
+    global setup
+    setup = not setup
+    if setup:
+        b.text = 'Begin'
     else:
-        b.text = 'Run'
-pb = button(text='Run', bind=pause)
+        b.delete()
+bb = button(text='Begin', bind=begin)
 
 '''
 void trail(b)
@@ -149,24 +149,27 @@ sl=slider(min=1, max=10, value=1, length=220, bind=selectmass)
 
 i = 0 #time
 
+while(setup):
+    rate(1/dt)
+sl.delete()
+masselector.delete()
 while(True):
     rate(1/dt)
-    if (run):
-        energyP = 0
-        energyK = 0
-        energyT = 0
-        energyE = 0
-        for j in range(n):
-            energyP += energyB[j][1]
-            energyK += energyB[j][0]
-        for j in range(n-1):
-            energyP += energyS[j]
+    energyP = 0
+    energyK = 0
+    energyT = 0
+    energyE = 0
+    for j in range(n):
+        energyP += energyB[j][1]
+        energyK += energyB[j][0]
+    for j in range(n-1):
+        energyP += energyS[j]
 
-        energyT = energyP + energyK
+    energyT = energyP + energyK
 
-        total.plot(i,energyT)
-        potential.plot(i, energyP)
-        kinetic.plot(i,energyK)
+    total.plot(i,energyT)
+    potential.plot(i, energyP)
+    kinetic.plot(i,energyK)
 
-        move()
-        i+=1
+    move()
+    i+=1
