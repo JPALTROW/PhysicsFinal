@@ -8,7 +8,7 @@ trailing = False
 def selectballz(s):
     global n
     n=int(s.value)
-ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
+ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz, text='Number of ballz')
 
 '''
 void begin(b)
@@ -122,7 +122,7 @@ l = []
 for i in range(n):
     l.append(str(i))
 
-masselector = menu(choices=l, index=0, bind=massmenu)
+masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
 def selectmass(s):
     masses[masselector.index] = s.value
     t = (s.value-s.min)/(s.max-s.min)
@@ -133,7 +133,6 @@ i = 0 #time
 
 while(setup):
     rate(1/dt)
-print(n)
 
 energy = graph(title='Energies of the Spvingz', xtitle='Time (ms)', ytitle='Energy (J)', fast=True, width=800)
 total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
@@ -143,7 +142,7 @@ kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
 DISTANCE = 6 #original distance between each spving
 EQUILIBRIUM = 4 #equilibrium distance between each spving
 G = 9.81 #gravity
-k = 10 #spring constant
+k = 100 #spring constant
 DAMPEN = .01 #dampening constant
 
 spvings = [] #array of spvings (contains helix objects)
