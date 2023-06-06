@@ -1,29 +1,14 @@
 from vpython import *
 
 n=20 #number of ballz
-
-energy = graph(title='Energies of the Spvingz', xtitle='Time (s)', ytitle='Energy (J)', fast=True, width=800)
-total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
-potential = gcurve(color = vector(0,0,1), label='Potential Energy')
-kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
-
-DISTANCE = 6 #original distance between each spving
-EQUILIBRIUM = 4 #equilibrium distance between each spving
-G = 9.81 #gravity
-k = 10 #spring constant
-DAMPEN = .01 #dampening constant
-
-spvings = [] #array of spvings (contains helix objects)
-masses = [1]*n #array of masses (stores constant values corresponding to mass)
-boxes = [] #array of balls (contains sphere objects)
-velocities = [] #array of velocities for each ball
-forces = [] #array of forces applied on each ball
-energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
-energyS = [] #stores energy of each spring (elastic)
-
 dt = .001 #time constant
 setup = True
 trailing = False
+
+def selectballz(s):
+    global n
+    n=int(s.value)
+ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
 
 '''
 void begin(b)
@@ -129,9 +114,6 @@ def update_energies():
     for i in range(n-1):
         energyS[i] = 1/2 * k * ((boxes[i].pos-boxes[i+1].pos).mag-EQUILIBRIUM)**2
 
-init()
-sleep(1)
-
 selectedmass = 0
 def massmenu(m):
     pass
@@ -145,14 +127,38 @@ def selectmass(s):
     masses[masselector.index] = s.value
     t = (s.value-s.min)/(s.max-s.min)
     boxes[masselector.index].color=vector(0,1,1) * (1-t) + vector(1,0,1) * t
-sl=slider(min=1, max=10, value=1, length=220, bind=selectmass)
+slidinator=slider(min=1, max=10, value=1, length=220, bind=selectmass)
 
 i = 0 #time
 
 while(setup):
     rate(1/dt)
-sl.delete()
+print(n)
+
+energy = graph(title='Energies of the Spvingz', xtitle='Time (ms)', ytitle='Energy (J)', fast=True, width=800)
+total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
+potential = gcurve(color = vector(0,0,1), label='Potential Energy')
+kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
+
+DISTANCE = 6 #original distance between each spving
+EQUILIBRIUM = 4 #equilibrium distance between each spving
+G = 9.81 #gravity
+k = 10 #spring constant
+DAMPEN = .01 #dampening constant
+
+spvings = [] #array of spvings (contains helix objects)
+masses = [1]*n #array of masses (stores constant values corresponding to mass)
+boxes = [] #array of balls (contains sphere objects)
+velocities = [] #array of velocities for each ball
+forces = [] #array of forces applied on each ball
+energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
+energyS = [] #stores energy of each spring (elastic)
+
+init()
+sleep(1)
+slidinator.delete()
 masselector.delete()
+ballzelector.delete()
 while(True):
     rate(1/dt)
     energyP = 0
