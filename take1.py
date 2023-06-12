@@ -1,6 +1,6 @@
 from vpython import *
 
-n=20 #number of ballz
+n = 20 #number of ballz
 dt = .001 #time constant
 setup = True
 trailing = False
@@ -13,19 +13,20 @@ forces = [] #array of forces applied on each ball
 energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
 energyS = [] #stores energy of each spring (elastic)
 
-wt = wtext(text='Mass for ball ')
+wt = wtext(text='Mass for ball ') #text dwai
 
 def massmenu(m):
-    slidinator.value = masses[masselector.index]
-    massval.text = ' = ' + str(masses[masselector.index])
+    slidinator.value = masses[masselector.index] #ensure fast update
+    massval.text = ' = ' + str(masses[masselector.index]) #display mass
 
-l = []
+l = [] #list of choices for masselector
 for i in range(n):
-    l.append(str(i))
+    l.append(str(i)) #UGGG VPYTHON
 
 masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
+#dropdown menu, lets you pick which ball's mass to edit
 
-massval = wtext(text=' = ' + str(masses[masselector.index]))
+massval = wtext(text=' = ' + str(masses[masselector.index])) #text dwai
 
 def selectmass(s):
     masses[masselector.index] = s.value
@@ -33,23 +34,24 @@ def selectmass(s):
     slidinator.value = masses[masselector.index]
 
 slidinator = slider(min=1, max=10, value=1, length=220, bind=selectmass)
+#allows you to edit the mass of the selected ball
 
-bt = wtext(text='# of ballz = ' + str(n))
+bt = wtext(text='# of ballz = ' + str(n)) #text dwai
 
 def selectballz(s):
-    global n
-    global masses
-    l = []
-    for i in range(n):
-        l.append(str(i))
-    n=int(s.value)
-    bt.text='Number of ballz = ' + str(n)
+    global n #****ing python
+    global masses #****ing python
+    n = int(s.value)
+    l = [] #ensuring masselector updates to account for appropriate # of balls
+    for i in range(n): #^
+        l.append(str(i)) #^
+    bt.text='Number of ballz = ' + str(n) #text dwai
     masses = [1]*n
-    masselector.index=0
-    masselector.choices=l
-    slidinator.value=masses[masselector.index]
+    masselector.index=0 #niceity
+    masselector.choices=l #ensuring masselector updates to account for appropriate # of balls
+    slidinator.value=masses[masselector.index] #niceity
 
-ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
+ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz) #slider to pick # of ballz
 
 '''
 void begin(b)
@@ -65,7 +67,7 @@ def begin(b):
     else:
         b.delete()
 
-bb = button(text='Begin', bind=begin)
+bb = button(text='Begin', bind=begin) #begin button
 
 '''
 void trail(b)
@@ -158,50 +160,44 @@ def update_energies():
     for i in range(n-1):
         energyS[i] = 1/2 * k * ((balls[i].pos-balls[i+1].pos).mag-EQUILIBRIUM)**2
 
-i = 0 #time
-
 while(setup):
     rate(1/dt)
+    #stall while setting up :)
 
+#GRAPH DEFINITIONS
 energy = graph(title='Energies of the Spvingz', xtitle='Time (ms)', ytitle='Energy (J)', fast=True, width=800)
 total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
 potential = gcurve(color = vector(0,0,1), label='Potential Energy')
 kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
 
+#PHYSICAL CONSTANTS
 DISTANCE = 6 #original distance between each spving
 EQUILIBRIUM = 4 #equilibrium distance between each spving
 G = 9.81 #gravity
 k = 100 #spring constant
 DAMPEN = .01 #dampening constant
 
-spvings = [] #array of spvings (contains helix objects)
-#masses = [1]*n #array of masses (stores constant values corresponding to mass)
-balls = [] #array of balls (contains sphere objects)
-velocities = [] #array of velocities for each ball
-forces = [] #array of forces applied on each ball
-energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
-energyS = [] #stores energy of each spring (elastic)
-
 init()
-sleep(1)
-slidinator.delete()
-masselector.delete()
-ballzelector.delete()
-wt.text = ''
-bt.text = ''
-massval.text = ''
-while(True):
+sleep(1) #****ing vpython
+slidinator.delete() #clearing setup screen
+masselector.delete() #clearing setup screen
+ballzelector.delete() #clearing setup screen
+wt.text = '' #clearing setup screen
+bt.text = '' #clearing setup screen
+massval.text = '' #clearing setup screen
+
+i = 0 #i is how many seconds have passed, we love sensible variable names
+while(True): #run function
     rate(1/dt)
     energyP = 0
     energyK = 0
     energyT = 0
-    energyE = 0
+
     for j in range(n):
         energyP += energyB[j][1]
         energyK += energyB[j][0]
     for j in range(n-1):
         energyP += energyS[j]
-
     energyT = energyP + energyK
 
     total.plot(i,energyT)
