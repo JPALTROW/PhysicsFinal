@@ -1,4 +1,5 @@
 from vpython import *
+import math
 
 #very IMPORTANT VARIABLES
 n = 20 #number of ballz
@@ -28,19 +29,25 @@ l = [] #list of choices for masselector
 for i in range(n):
     l.append(str(i)) #add all numbers
 
+#returns a string of n truncated to 1 decimal place
+def str_1decplace(n):
+    trunc = floor(10*n)/10
+    return(str(trunc))
+
+
 #dropdown menu, lets you pick which ball's mass to edit
 def massmenu(m):
     slidinator.value = masses[masselector.index] #ensure fast update of mass
-    massval.text = ' = ' + str(masses[masselector.index]) #display mass
+    massval.text = ' = ' + str_1decplace(masses[masselector.index]) #display mass
 masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
 
-massval = wtext(text=' = ' + str(masses[masselector.index])) #text
+massval = wtext(text=' = ' + str_1decplace(masses[masselector.index])) #text
 
 
 #allows you to edit the mass of the selected ball
 def selectmass(s):
     masses[masselector.index] = s.value
-    massval.text = ' = ' + str(masses[masselector.index])
+    massval.text = ' = ' + str_1decplace(masses[masselector.index])
     slidinator.value = masses[masselector.index]
 slidinator = slider(min=1, max=10, value=1, length=220, bind=selectmass)
 
@@ -63,11 +70,11 @@ def selectballz(s):
 ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
 
 scene.append_to_caption('\n\n')
-kt = wtext(text = 'Spving konstant = ' + str(k))
+kt = wtext(text = 'Spving konstant = ' + str_1decplace(k))
 def selectspvingkonstant(s):
     global k
     k = s.value
-    kt.text = 'Spving konstant = ' + str(k)
+    kt.text = 'Spving konstant = ' + str_1decplace(k)
 spvingkonstantsevector=slider(min=1, max=200, value=100, length=220, bind=selectspvingkonstant)
 '''
 void begin(b)
