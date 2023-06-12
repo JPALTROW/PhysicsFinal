@@ -2,7 +2,7 @@
 Our program simulates a large chain of spvings with dampening similar to air-resistance. \
 Each spving has two ballz on each end, with a certain user-selected mass. \
 When the program is run you can watch as gravity acts on the chain of spvingz and they stretch. \
-We also graph potential (gravitational and elastic energies), kinetic, and total energy. \
+We also graph potential (gravitational and elastic energies), kinetic, and total energy.
 
 ## INTERESTING STUFF IT DOOS
 All three energy graphs should follow dampened oscillation curves. \
