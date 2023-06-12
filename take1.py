@@ -13,51 +13,50 @@ forces = [] #array of forces applied on each ball
 energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
 energyS = [] #stores energy of each spring (elastic)
 
-wt = wtext(text='Mass for ball ') #text dwai
-
-def massmenu(m):
-    slidinator.value = masses[masselector.index] #ensure fast update
-    massval.text = ' = ' + str(masses[masselector.index]) #display mass
+wt = wtext(text='Mass for ball ') #text
 
 l = [] #list of choices for masselector
 for i in range(n):
-    l.append(str(i)) #UGGG VPYTHON
+    l.append(str(i)) #add all numbers
 
-masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
 #dropdown menu, lets you pick which ball's mass to edit
+def massmenu(m):
+    slidinator.value = masses[masselector.index] #ensure fast update of mass
+    massval.text = ' = ' + str(masses[masselector.index]) #display mass
+masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
 
-massval = wtext(text=' = ' + str(masses[masselector.index])) #text dwai
+massval = wtext(text=' = ' + str(masses[masselector.index])) #text
 
+
+#allows you to edit the mass of the selected ball
 def selectmass(s):
     masses[masselector.index] = s.value
     massval.text = ' = ' + str(masses[masselector.index])
     slidinator.value = masses[masselector.index]
-
 slidinator = slider(min=1, max=10, value=1, length=220, bind=selectmass)
-#allows you to edit the mass of the selected ball
 
-bt = wtext(text='# of ballz = ' + str(n)) #text dwai
+bt = wtext(text='# of ballz = ' + str(n)) #text
 
+#slider to pick # of ballz
 def selectballz(s):
-    global n #****ing python
-    global masses #****ing python
-    n = int(s.value)
+    global n
+    global masses
+    n = int(s.value) #integer number of ballz
     l = [] #ensuring masselector updates to account for appropriate # of balls
-    for i in range(n): #^
-        l.append(str(i)) #^
-    bt.text='Number of ballz = ' + str(n) #text dwai
-    masses = [1]*n
+    for i in range(n):
+        l.append(str(i))
+    bt.text='Number of ballz = ' + str(n) #text
+    masses = [1]*n #initialize masses array
     masselector.index=0 #niceity
     masselector.choices=l #ensuring masselector updates to account for appropriate # of balls
     slidinator.value=masses[masselector.index] #niceity
-
-ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz) #slider to pick # of ballz
+ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
 
 '''
 void begin(b)
 Inputs:
 Returns:
-pause button updates global setup variable
+Button updates to change state from setup to simulation
 '''
 def begin(b):
     global setup
@@ -66,18 +65,17 @@ def begin(b):
         b.text = 'Begin'
     else:
         b.delete()
-
 bb = button(text='Begin', bind=begin) #begin button
 
 '''
 void trail(b)
 Inputs:
 Returns:
-Toggles trace on the balls
+Toggles trace on the balls (optional feature)
 '''
 def trail(b):
     global trailing
-    trailing = not trailing
+    trailing = not trailing #toggle
     if trailing:
         b.text = 'Trail Off'
         for i in balls:
@@ -86,8 +84,7 @@ def trail(b):
         b.text = 'Trail On'
         for i in balls:
             i.make_trail = False
-            i.clear_trail()
-
+            i.clear_trail() #no more trail :(
 tb = button(text='Trail On', bind=trail)
 
 '''
@@ -98,14 +95,14 @@ initializes balls based on DISTANCE and initializes spvings and energy arrays
 '''
 def init():
     for e in range(n):
-        t = (masses[e] - slidinator.min)/(slidinator.max-slidinator.min)
-        balls.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,1) * (1-t) + vector(1,0,1) * t, make_trail = False, retain = 100))
-        velocities.append(vector(0,0,0))
-        forces.append(vector(0, 0, 0))
-        energyB.append([0,masses[e]*G*balls[e].pos.y])
+        t = (masses[e] - slidinator.min)/(slidinator.max-slidinator.min) #color gradient based on mass
+        balls.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,1) * (1-t) + vector(1,0,1) * t, make_trail = False, retain = 100)) #creates masses
+        velocities.append(vector(0,0,0)) #initialize velocity to 0
+        forces.append(vector(0, 0, 0)) #initialize force to 0
+        energyB.append([0,masses[e]*G*balls[e].pos.y]) #initialize gravitational potential energy
     for e in range(n-1):
-        spvings.append(helix(pos=balls[e].pos, axis=balls[e+1].pos-balls[e].pos, thickness=1))
-        energyS.append(1/2 * k * ((balls[e].pos-balls[e+1].pos).mag-EQUILIBRIUM)**2)
+        spvings.append(helix(pos=balls[e].pos, axis=balls[e+1].pos-balls[e].pos, thickness=1)) #draw springs
+        energyS.append(1/2 * k * ((balls[e].pos-balls[e+1].pos).mag-EQUILIBRIUM)**2) #initialize elastic potential energy
     energy = graph(title='Energies of the Spvingz', xtitle='Time (s)', ytitle='Energy (J)', fast=True, width=800)
     total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
     potential = gcurve(color = vector(0,0,1), label='Potential Energy')
@@ -118,6 +115,8 @@ Returns:
 updates positions and velocities of balls and redraws springs based on velocities and forces
 
 move() is the only function we will be running, calls update_forces after updating position
+applies acceleration (force/mass) to velocity and velocity to position to create simulation
+redraws springs in correct location
 '''
 def move():
     for e in range(n):
@@ -137,16 +136,16 @@ updates forces array based on gravity and spring force
 '''
 def update_forces():
     for i in range(n):
-        forces[i] = vector(0, -G*masses[i], 0)
+        forces[i] = vector(0, -G*masses[i], 0) #gravitational force
     for i in range(n-1):
         diff = (balls[i+1].pos + balls[i].pos)/2 - balls[i].pos
         diff = (2*diff.mag - EQUILIBRIUM) / diff.mag * diff
-        forces[i] += diff*k
+        forces[i] += diff*k #spring force on each end
         forces[i+1] += diff*(-k)
-    forces[0] = vector(0,0,0)
+    forces[0] = vector(0,0,0) #endpoints should not move
     forces[n-1] = vector(0,0,0)
     for i in range(n):
-        forces[i] += DAMPEN*(velocities[i].dot(velocities[i]))*(-1)*velocities[i].hat
+        forces[i] += DAMPEN*(velocities[i].dot(velocities[i]))*(-1)*velocities[i].hat #velocity squared dampening
 
 '''
 void update_energies()
@@ -156,9 +155,9 @@ updates energies arrays based on physical scenario
 '''
 def update_energies():
     for i in range(n):
-        energyB[i] = [masses[i]*velocities[i].mag*velocities[i].mag/2,masses[i]*G*balls[i].pos.y]
+        energyB[i] = [masses[i]*velocities[i].mag*velocities[i].mag/2,masses[i]*G*balls[i].pos.y] #kinetic, gravitational potential energy
     for i in range(n-1):
-        energyS[i] = 1/2 * k * ((balls[i].pos-balls[i+1].pos).mag-EQUILIBRIUM)**2
+        energyS[i] = 1/2 * k * ((balls[i].pos-balls[i+1].pos).mag-EQUILIBRIUM)**2 #elastic potential energy
 
 while(setup):
     rate(1/dt)
@@ -178,7 +177,7 @@ k = 100 #spring constant
 DAMPEN = .01 #dampening constant
 
 init()
-sleep(1) #****ing vpython
+sleep(1) #Yay this is very important
 slidinator.delete() #clearing setup screen
 masselector.delete() #clearing setup screen
 ballzelector.delete() #clearing setup screen
@@ -188,18 +187,18 @@ massval.text = '' #clearing setup screen
 
 i = 0 #i is how many seconds have passed, we love sensible variable names
 while(True): #run function
-    rate(1/dt)
+    rate(1/dt) #run the loop (also strangely very important)
     energyP = 0
     energyK = 0
     energyT = 0
-
+#calculate energies
     for j in range(n):
         energyP += energyB[j][1]
         energyK += energyB[j][0]
     for j in range(n-1):
         energyP += energyS[j]
     energyT = energyP + energyK
-
+#graph
     total.plot(i,energyT)
     potential.plot(i, energyP)
     kinetic.plot(i,energyK)
