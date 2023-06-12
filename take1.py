@@ -5,10 +5,41 @@ dt = .001 #time constant
 setup = True
 trailing = False
 
+spvings = [] #array of spvings (contains helix objects)
+masses = [1]*n #array of masses (stores constant values corresponding to mass)
+boxes = [] #array of balls (contains sphere objects)
+velocities = [] #array of velocities for each ball
+forces = [] #array of forces applied on each ball
+energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
+energyS = [] #stores energy of each spring (elastic)
+
+l = []
+for i in range(n):
+    l.append(str(i))
+
+def selectmass(s):
+    masses[masselector.index] = s.value
+wt = wtext(text='Mass for ball ')
+selectedmass = 0
+def massmenu(m):
+    pass
+
+masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
+slidinator=slider(min=1, max=10, value=1, length=220, bind=selectmass)
+
+bt = wtext(text='Number of ballz = ' + str(n))
 def selectballz(s):
     global n
+    global masses
+    #global bt
+    l = []
+    for i in range(n):
+        l.append(str(i))
     n=int(s.value)
-ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz, text='Number of ballz')
+    bt.text='Number of ballz = ' + str(n)
+    masses = [1]*n
+    masselector.choices=l
+ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
 
 '''
 void begin(b)
@@ -53,7 +84,8 @@ initializes boxes based on DISTANCE and initializes spvings and energy arrays
 '''
 def init():
     for e in range(n):
-        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,1), make_trail = False, retain = 100))
+        t = (masses[e] - slidinator.min)/(slidinator.max-slidinator.min)
+        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,1) * (1-t) + vector(1,0,1) * t, make_trail = False, retain = 100))
         velocities.append(vector(0,0,0))
         forces.append(vector(0, 0, 0))
         energyB.append([0,masses[e]*G*boxes[e].pos.y])
@@ -114,21 +146,6 @@ def update_energies():
     for i in range(n-1):
         energyS[i] = 1/2 * k * ((boxes[i].pos-boxes[i+1].pos).mag-EQUILIBRIUM)**2
 
-selectedmass = 0
-def massmenu(m):
-    pass
-
-l = []
-for i in range(n):
-    l.append(str(i))
-
-masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
-def selectmass(s):
-    masses[masselector.index] = s.value
-    t = (s.value-s.min)/(s.max-s.min)
-    boxes[masselector.index].color=vector(0,1,1) * (1-t) + vector(1,0,1) * t
-slidinator=slider(min=1, max=10, value=1, length=220, bind=selectmass)
-
 i = 0 #time
 
 while(setup):
@@ -146,7 +163,7 @@ k = 100 #spring constant
 DAMPEN = .01 #dampening constant
 
 spvings = [] #array of spvings (contains helix objects)
-masses = [1]*n #array of masses (stores constant values corresponding to mass)
+#masses = [1]*n #array of masses (stores constant values corresponding to mass)
 boxes = [] #array of balls (contains sphere objects)
 velocities = [] #array of velocities for each ball
 forces = [] #array of forces applied on each ball
@@ -158,6 +175,8 @@ sleep(1)
 slidinator.delete()
 masselector.delete()
 ballzelector.delete()
+wt.text = ''
+bt.text = ''
 while(True):
     rate(1/dt)
     energyP = 0
