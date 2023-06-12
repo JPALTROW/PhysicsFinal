@@ -12,7 +12,7 @@ In general, the gwaphs are pwetty.
 
 # WHAT DO YOU DO TO GET IT TO DO
 Upon running the program you should see a blank screen, and some text and sliders at the bottom. \
-This should (from left to right) allow you to:
+This should (from left to right & top to bottom) allow you to:
 * Select the ball whose mass you would like to edit (drop down menu)
 * Select the mass of the ball chosen above (slider)
 * Select the number of balls in the chain (slider)
@@ -24,4 +24,5 @@ Trails for each mass can be toggled with the trail button.
 
 # PARTING THOUGHTS
 Our simulation has all the code necessary to handle z-axis motion, we just never had any in the initial configuration. \
+Energy goes up over time. We think it is due to floating point error. Stuff kind of starts to wiggle. \
 Please don't destroy?!?
