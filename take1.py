@@ -7,38 +7,48 @@ trailing = False
 
 spvings = [] #array of spvings (contains helix objects)
 masses = [1]*n #array of masses (stores constant values corresponding to mass)
-boxes = [] #array of balls (contains sphere objects)
+balls = [] #array of balls (contains sphere objects)
 velocities = [] #array of velocities for each ball
 forces = [] #array of forces applied on each ball
 energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
 energyS = [] #stores energy of each spring (elastic)
 
+wt = wtext(text='Mass for ball ')
+
+def massmenu(m):
+    slidinator.value = masses[masselector.index]
+    massval.text = ' = ' + str(masses[masselector.index])
+
 l = []
 for i in range(n):
     l.append(str(i))
 
+masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
+
+massval = wtext(text=' = ' + str(masses[masselector.index]))
+
 def selectmass(s):
     masses[masselector.index] = s.value
-wt = wtext(text='Mass for ball ')
-selectedmass = 0
-def massmenu(m):
-    pass
+    massval.text = ' = ' + str(masses[masselector.index])
+    slidinator.value = masses[masselector.index]
 
-masselector = menu(choices=l, index=0, bind=massmenu, text='Mass of ball')
-slidinator=slider(min=1, max=10, value=1, length=220, bind=selectmass)
+slidinator = slider(min=1, max=10, value=1, length=220, bind=selectmass)
 
-bt = wtext(text='Number of ballz = ' + str(n))
+bt = wtext(text='# of ballz = ' + str(n))
+
 def selectballz(s):
     global n
     global masses
-    #global bt
     l = []
     for i in range(n):
         l.append(str(i))
     n=int(s.value)
     bt.text='Number of ballz = ' + str(n)
     masses = [1]*n
+    masselector.index=0
     masselector.choices=l
+    slidinator.value=masses[masselector.index]
+
 ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
 
 '''
@@ -54,6 +64,7 @@ def begin(b):
         b.text = 'Begin'
     else:
         b.delete()
+
 bb = button(text='Begin', bind=begin)
 
 '''
@@ -67,31 +78,32 @@ def trail(b):
     trailing = not trailing
     if trailing:
         b.text = 'Trail Off'
-        for i in boxes:
+        for i in balls:
             i.make_trail = True
     else:
         b.text = 'Trail On'
-        for i in boxes:
+        for i in balls:
             i.make_trail = False
             i.clear_trail()
+
 tb = button(text='Trail On', bind=trail)
 
 '''
 void init()
 Inputs:
 Returns:
-initializes boxes based on DISTANCE and initializes spvings and energy arrays
+initializes balls based on DISTANCE and initializes spvings and energy arrays
 '''
 def init():
     for e in range(n):
         t = (masses[e] - slidinator.min)/(slidinator.max-slidinator.min)
-        boxes.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,1) * (1-t) + vector(1,0,1) * t, make_trail = False, retain = 100))
+        balls.append(sphere(pos = vector(10-e*DISTANCE,6,0), radius = 2, color = vector(0,1,1) * (1-t) + vector(1,0,1) * t, make_trail = False, retain = 100))
         velocities.append(vector(0,0,0))
         forces.append(vector(0, 0, 0))
-        energyB.append([0,masses[e]*G*boxes[e].pos.y])
+        energyB.append([0,masses[e]*G*balls[e].pos.y])
     for e in range(n-1):
-        spvings.append(helix(pos=boxes[e].pos, axis=boxes[e+1].pos-boxes[e].pos, thickness=1))
-        energyS.append(1/2 * k * ((boxes[e].pos-boxes[e+1].pos).mag-EQUILIBRIUM)**2)
+        spvings.append(helix(pos=balls[e].pos, axis=balls[e+1].pos-balls[e].pos, thickness=1))
+        energyS.append(1/2 * k * ((balls[e].pos-balls[e+1].pos).mag-EQUILIBRIUM)**2)
     energy = graph(title='Energies of the Spvingz', xtitle='Time (s)', ytitle='Energy (J)', fast=True, width=800)
     total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
     potential = gcurve(color = vector(0,0,1), label='Potential Energy')
@@ -107,11 +119,11 @@ move() is the only function we will be running, calls update_forces after updati
 '''
 def move():
     for e in range(n):
-        boxes[e].pos+=velocities[e] * dt
+        balls[e].pos+=velocities[e] * dt
         velocities[e]+=forces[e]/masses[e] * dt
     for e in range(n-1):
-        spvings[e].pos = boxes[e].pos
-        spvings[e].axis = boxes[e+1].pos-boxes[e].pos
+        spvings[e].pos = balls[e].pos
+        spvings[e].axis = balls[e+1].pos-balls[e].pos
     update_forces()
     update_energies()
 
@@ -125,7 +137,7 @@ def update_forces():
     for i in range(n):
         forces[i] = vector(0, -G*masses[i], 0)
     for i in range(n-1):
-        diff = (boxes[i+1].pos + boxes[i].pos)/2 - boxes[i].pos
+        diff = (balls[i+1].pos + balls[i].pos)/2 - balls[i].pos
         diff = (2*diff.mag - EQUILIBRIUM) / diff.mag * diff
         forces[i] += diff*k
         forces[i+1] += diff*(-k)
@@ -142,9 +154,9 @@ updates energies arrays based on physical scenario
 '''
 def update_energies():
     for i in range(n):
-        energyB[i] = [masses[i]*velocities[i].mag*velocities[i].mag/2,masses[i]*G*boxes[i].pos.y]
+        energyB[i] = [masses[i]*velocities[i].mag*velocities[i].mag/2,masses[i]*G*balls[i].pos.y]
     for i in range(n-1):
-        energyS[i] = 1/2 * k * ((boxes[i].pos-boxes[i+1].pos).mag-EQUILIBRIUM)**2
+        energyS[i] = 1/2 * k * ((balls[i].pos-balls[i+1].pos).mag-EQUILIBRIUM)**2
 
 i = 0 #time
 
@@ -164,7 +176,7 @@ DAMPEN = .01 #dampening constant
 
 spvings = [] #array of spvings (contains helix objects)
 #masses = [1]*n #array of masses (stores constant values corresponding to mass)
-boxes = [] #array of balls (contains sphere objects)
+balls = [] #array of balls (contains sphere objects)
 velocities = [] #array of velocities for each ball
 forces = [] #array of forces applied on each ball
 energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
@@ -177,6 +189,7 @@ masselector.delete()
 ballzelector.delete()
 wt.text = ''
 bt.text = ''
+massval.text = ''
 while(True):
     rate(1/dt)
     energyP = 0
