@@ -21,6 +21,6 @@ This should (from left to right) allow you to:
 After clicking begin, you can sit back, relax and enjoy your flight! \
 Trails for each mass can be toggled with the trail button.
 
-#PARTING THOUGHTS
+# PARTING THOUGHTS
 Our simulation has all the code necessary to handle z-axis motion, we just never had any in the initial configuration. \
 Please don't destroy?!?
