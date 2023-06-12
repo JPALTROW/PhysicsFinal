@@ -16,6 +16,7 @@ This should (from left to right) allow you to:
 * Select the ball whose mass you would like to edit (drop down menu)
 * Select the mass of the ball chosen above (slider)
 * Select the number of balls in the chain (slider)
+* Select the spving konstant (slider)
 * Begin the simulation (button)
 
 After clicking begin, you can sit back, relax and enjoy your flight! \

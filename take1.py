@@ -1,10 +1,12 @@
 from vpython import *
 
+#very IMPORTANT VARIABLES
 n = 20 #number of ballz
 dt = .001 #time constant
 setup = True
 trailing = False
 
+#TEN MILLION ARRAYS
 spvings = [] #array of spvings (contains helix objects)
 masses = [1]*n #array of masses (stores constant values corresponding to mass)
 balls = [] #array of balls (contains sphere objects)
@@ -12,6 +14,13 @@ velocities = [] #array of velocities for each ball
 forces = [] #array of forces applied on each ball
 energyB = [] #stores energies of each ball (energyB[i]=[Kinetic energy of i, Potential energy of i])
 energyS = [] #stores energy of each spring (elastic)
+
+#PHYSICAL CONSTANTS
+DISTANCE = 6 #original distance between each spving
+EQUILIBRIUM = 4 #equilibrium distance between each spving
+G = 9.81 #gravity
+k = 100 #spring constant
+DAMPEN = .01 #dampening constant
 
 wt = wtext(text='Mass for ball ') #text
 
@@ -35,7 +44,8 @@ def selectmass(s):
     slidinator.value = masses[masselector.index]
 slidinator = slider(min=1, max=10, value=1, length=220, bind=selectmass)
 
-bt = wtext(text='# of ballz = ' + str(n)) #text
+scene.append_to_caption('\n\n')
+bt = wtext(text='Number of ballz = ' + str(n)) #text
 
 #slider to pick # of ballz
 def selectballz(s):
@@ -52,6 +62,13 @@ def selectballz(s):
     slidinator.value=masses[masselector.index] #niceity
 ballzelector=slider(min=1, max=100, value=20, length=220, bind=selectballz)
 
+scene.append_to_caption('\n\n')
+kt = wtext(text = 'Spving konstant = ' + str(k))
+def selectspvingkonstant(s):
+    global k
+    k = s.value
+    kt.text = 'Spving konstant = ' + str(k)
+spvingkonstantsevector=slider(min=1, max=200, value=100, length=220, bind=selectspvingkonstant)
 '''
 void begin(b)
 Inputs:
@@ -65,6 +82,7 @@ def begin(b):
         b.text = 'Begin'
     else:
         b.delete()
+scene.append_to_caption('\n\n')
 bb = button(text='Begin', bind=begin) #begin button
 
 '''
@@ -169,20 +187,16 @@ total = gcurve(color = vector(1,0,1), label='Total Energy') # a graphics curve
 potential = gcurve(color = vector(0,0,1), label='Potential Energy')
 kinetic = gcurve(color = vector(0,1,1), label='Kinetic Energy')
 
-#PHYSICAL CONSTANTS
-DISTANCE = 6 #original distance between each spving
-EQUILIBRIUM = 4 #equilibrium distance between each spving
-G = 9.81 #gravity
-k = 100 #spring constant
-DAMPEN = .01 #dampening constant
-
 init()
 sleep(1) #Yay this is very important
 slidinator.delete() #clearing setup screen
 masselector.delete() #clearing setup screen
 ballzelector.delete() #clearing setup screen
+spvingkonstantsevector.delete()
 wt.text = '' #clearing setup screen
 bt.text = '' #clearing setup screen
+kt.text = ''
+
 massval.text = '' #clearing setup screen
 
 i = 0 #i is how many seconds have passed, we love sensible variable names
